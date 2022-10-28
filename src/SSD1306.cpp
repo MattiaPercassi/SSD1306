@@ -9,36 +9,12 @@
 SSD1306::SSD1306(int h, int w) : addr{0x3c}, height{h}, width{w}
 {
     fd = i2cOpen(1, addr, 0);
-    std::ifstream ifile{"/home/mattia/Documents/i2ctest/resources/rie.bmp", std::ios::binary};
-    if (ifile)
-    {
-        ifile.ignore(62); // header length in 1bpp bitmap
-        char dt;
-        std::array<char, 4 * 128> tempStor{};
-        for (auto &byte : tempStor)
-        {
-            ifile.read(&dt, 1);
-            byte = dt;
-        }
-        char temp{};
-        for (int i{}; i < 64; ++i) // 64 blocks of 8 bytes
-        {
-            for (int j{}; j < 8; ++j) // go through each byte of the new image
-            {
-                for (int z{}; z < 8; ++z) // go through each byte of the original bitmap
-                {
-                    temp = 1 & (tempStor[128 * (4 - i / 16) - 16 + i % 16 - z * 16] >> (7 - j));
-                    startupImage[i * 8 + j] += (temp << z);
-                }
-            }
-        }
-        ifile.close();
-    }
+    loadCustomImage("/home/mattia/Documents/i2ctest/resources/rie.bmp");
 };
 
 int SSD1306::loadCustomImage(std::string filepath)
 {
-    std::ifstream ifile{filepath};
+    std::ifstream ifile{filepath, std::ios::binary};
     if (!ifile)
     {
         std::cerr << "Error opening custom image";
@@ -260,28 +236,14 @@ int SSD1306::resetCursor()
     return 0;
 }
 
-int SSD1306::writeImage()
+int SSD1306::writeImage(int index)
 {
+    if (index > Images.size() - 1 || index < 0)
+    {
+        std::cerr << "Index not acceptable";
+        return -1;
+    }
     std::vector<char> mess;
-    // // command for set column address
-    // mess.push_back(cmdCo_continue);
-    // mess.push_back(0x21);
-    // mess.push_back(cmdCo_continue);
-    // mess.push_back(0);
-    // mess.push_back(cmdCo_single);
-    // mess.push_back(127);
-    // i2cWriteDevice(fd, mess.data(), 6);
-    // // command for set address page
-    // mess.push_back(cmdCo_continue);
-    // mess.push_back(0x22);
-    // mess.push_back(cmdCo_continue);
-    // mess.push_back(0);
-    // mess.push_back(cmdCo_single);
-    // mess.push_back(3);
-    // i2cWriteDevice(fd, mess.data(), 6);
-    // build2bMes(cmdCo_single, setStar);
-    // i2cWriteDevice(fd, Message2b.data(), 2);
-    // std::array<char, 4 * 128> image{0};
     int i{};
     while (i < 4 * 128)
     {
@@ -289,18 +251,13 @@ int SSD1306::writeImage()
         mess.push_back(dataCo);
         for (int j{1}; j < 31; ++j)
         {
-            mess.push_back(startupImage[i]);
+            mess.push_back(Images.at(index).at(i));
             i++;
             if (i >= 4 * 128)
                 break;
         }
         i2cWriteDevice(fd, mess.data(), mess.size());
-        // send additional byte to display the data
-        // build2bMes(cmdCo_single, 0x00);
-        // i2cWriteDevice(fd, Message2b.data(), 2);
     }
-    build2bMes(cmdCo_single, noOP);
-    i2cWriteDevice(fd, Message2b.data(), 2); // display data?
     return 0;
 };
 

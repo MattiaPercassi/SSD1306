@@ -55,7 +55,7 @@ public:
     int litAll();
     int showRAM();
     int turnOFF();
-    int writeImage(); // for the moment only bitmap startup
+    int writeImage(int);
     int emptyRAM();
     int resetCursor();
     int fillwithbyte(char);
