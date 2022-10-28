@@ -1,0 +1,2 @@
+Library for connecting SSD1306 OLED display in the verison 128x32 to Raspberry Pi through I2C bus.
+This is mean to be an exercise for C++ coding of I2C communication using the available pigpio library.
