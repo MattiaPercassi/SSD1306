@@ -4,6 +4,7 @@
 #include <vector>
 #include <bitset>
 #include <iostream>
+#include <string>
 
 SSD1306::SSD1306(int h, int w) : addr{0x3c}, height{h}, width{w}
 {
@@ -35,6 +36,50 @@ SSD1306::SSD1306(int h, int w) : addr{0x3c}, height{h}, width{w}
     }
 };
 
+int SSD1306::loadCustomImage(std::string filepath)
+{
+    std::ifstream ifile{filepath};
+    if (!ifile)
+    {
+        std::cerr << "Error opening custom image";
+        return -1;
+    }
+    // we need to ensure it is a 1bpp bitmap
+    char dt;
+    std::array<char, 3> validationArr;
+    ifile.read(validationArr, 2);
+    ifile.ignore(26);
+    ifile.read(validationArr + 2, 1);
+    if (validationArr.at(0) != 0x42 || validationArr.at(1) != 0x4d || validationArr.at(2) != 0x01)
+    {
+        std::cerr << "It seems that the image is not a 1bpp bitmap";
+        return -1;
+    }
+    ifile.clear();
+    ifile.seekg(0);
+    ifile.ignore(62); // header length in 1bpp bitmap
+    std::array<char, 4 * 128> tempStor{};
+    std::array<char, 4 * 128> finalImage{};
+    for (auto &byte : tempStor)
+    {
+        ifile.read(&dt, 1);
+        byte = dt;
+    }
+    for (int i{}; i < 64; ++i) // 64 blocks of 8 bytes
+    {
+        for (int j{}; j < 8; ++j) // go through each byte of the new image
+        {
+            for (int z{}; z < 8; ++z) // go through each byte of the original bitmap
+            {
+                dt = 1 & (tempStor[128 * (4 - i / 16) - 16 + i % 16 - z * 16] >> (7 - j));
+                finalImage[i * 8 + j] += (dt << z);
+            }
+        }
+    }
+    ifile.close();
+    Images.push_back(finalImage);
+    return 0;
+}
 void SSD1306::build2bMes(char co1, char d1)
 {
     Message2b[0] = co1;

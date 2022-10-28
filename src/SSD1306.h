@@ -46,6 +46,7 @@ protected:
 
     // resources
     std::array<char, 16 * 32> startupImage{};
+    std::vector<std::array<char, 4 * 128>> Images;
 
 public:
     SSD1306(int h, int w);
@@ -59,6 +60,7 @@ public:
     int resetCursor();
     int fillwithbyte(char);
     int invertDisplay();
+    int loadCustomImage(std::string);
 };
 
 #endif
