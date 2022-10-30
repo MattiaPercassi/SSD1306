@@ -84,102 +84,102 @@ int SSD1306::init()
         perror("i2cOpen");
         return -1;
     };
-    build4bMes(cmdCo_continue, setMUX, cmdCo_single, 63);
+    build4bMes(CObyte.cmdCo_continue, cmd.setMUX, CObyte.cmdCo_single, 63);
     if (i2cWriteDevice(fd, Message4b.data(), 4) < 0)
     {
         perror("set mux");
         return -1;
     }
-    build4bMes(cmdCo_continue, setOffset, cmdCo_single, 0);
+    build4bMes(CObyte.cmdCo_continue, cmd.setOffset, CObyte.cmdCo_single, 0);
     if (i2cWriteDevice(fd, Message4b.data(), 4) < 0)
     {
         perror("set offset");
         return -1;
     }
-    build2bMes(cmdCo_single, setStar);
+    build2bMes(CObyte.cmdCo_single, cmd.setStar);
     if (i2cWriteDevice(fd, Message2b.data(), 2) < 0)
     {
         perror("set start");
         return -1;
     }
-    build2bMes(cmdCo_single, setRemap | 1); // remap com0 to com 127
+    build2bMes(CObyte.cmdCo_single, cmd.setRemap | 1); // remap com0 to com 127
     if (i2cWriteDevice(fd, Message2b.data(), 2) < 0)
     {
         perror("set remap");
         return -1;
     }
-    build2bMes(cmdCo_single, setCOMdir);
+    build2bMes(CObyte.cmdCo_single, cmd.setCOMdir);
     if (i2cWriteDevice(fd, Message2b.data(), 2) < 0)
     {
         perror("set COMdir");
         return -1;
     }
-    build4bMes(cmdCo_continue, setCOMpins, cmdCo_single, 0x02);
+    build4bMes(CObyte.cmdCo_continue, cmd.setCOMpins, CObyte.cmdCo_single, 0x02);
     if (i2cWriteDevice(fd, Message4b.data(), 4) < 0)
     {
         perror("set COM pins");
         return -1;
     }
-    build4bMes(cmdCo_continue, setContrast, cmdCo_single, 0x8f);
+    build4bMes(CObyte.cmdCo_continue, cmd.setContrast, CObyte.cmdCo_single, 0x8f);
     if (i2cWriteDevice(fd, Message4b.data(), 4) < 0)
     {
         perror("Set contrast");
         return -1;
     }
-    build2bMes(cmdCo_single, displayRAM);
+    build2bMes(CObyte.cmdCo_single, cmd.displayRAM);
     if (i2cWriteDevice(fd, Message2b.data(), 2) < 0)
     {
         perror("disable display");
         return -1;
     }
-    build2bMes(cmdCo_single, setNormDis);
+    build2bMes(CObyte.cmdCo_single, cmd.setNormDis);
     if (i2cWriteDevice(fd, Message2b.data(), 2) < 0)
     {
         perror("set normal display");
         return -1;
     }
-    build4bMes(cmdCo_continue, setOsc, cmdCo_single, 0x80);
+    build4bMes(CObyte.cmdCo_continue, cmd.setOsc, CObyte.cmdCo_single, 0x80);
     if (i2cWriteDevice(fd, Message4b.data(), 4) < 0)
     {
         perror("set oscillator");
         return -1;
     }
-    build4bMes(cmdCo_continue, chargePump, cmdCo_single, 0x14);
+    build4bMes(CObyte.cmdCo_continue, cmd.chargePump, CObyte.cmdCo_single, 0x14);
     if (i2cWriteDevice(fd, Message4b.data(), 4) < 0)
     {
         perror("set chargepump");
         return -1;
     }
     // set precharge
-    build4bMes(cmdCo_continue, setPrecharge, cmdCo_single, 0xf1);
+    build4bMes(CObyte.cmdCo_continue, cmd.setPrecharge, CObyte.cmdCo_single, 0xf1);
     i2cWriteDevice(fd, Message4b.data(), 4);
     // set vcomdetect
-    build4bMes(cmdCo_continue, setVCOMdetect, cmdCo_single, 0x20);
+    build4bMes(CObyte.cmdCo_continue, cmd.setVCOMdetect, CObyte.cmdCo_single, 0x20);
     i2cWriteDevice(fd, Message4b.data(), 4);
     std::vector<char> mess;
     // command for set address page
-    mess.push_back(cmdCo_continue);
+    mess.push_back(CObyte.cmdCo_continue);
     mess.push_back(0x22);
-    mess.push_back(cmdCo_continue);
+    mess.push_back(CObyte.cmdCo_continue);
     mess.push_back(4);
-    mess.push_back(cmdCo_single);
+    mess.push_back(CObyte.cmdCo_single);
     mess.push_back(7);
     i2cWriteDevice(fd, mess.data(), 6);
     // command for set column address
-    mess.push_back(cmdCo_continue);
+    mess.push_back(CObyte.cmdCo_continue);
     mess.push_back(0x21);
-    mess.push_back(cmdCo_continue);
+    mess.push_back(CObyte.cmdCo_continue);
     mess.push_back(0);
-    mess.push_back(cmdCo_single);
+    mess.push_back(CObyte.cmdCo_single);
     mess.push_back(127);
     i2cWriteDevice(fd, mess.data(), 6);
     // set horizontal mode
-    build4bMes(cmdCo_continue, setMode, cmdCo_single, 0x00);
+    build4bMes(CObyte.cmdCo_continue, cmd.setMode, CObyte.cmdCo_single, 0x00);
     i2cWriteDevice(fd, Message4b.data(), 4);
     //  set no scroll
-    build2bMes(cmdCo_single, deactivateScroll);
+    build2bMes(CObyte.cmdCo_single, cmd.deactivateScroll);
     i2cWriteDevice(fd, Message2b.data(), 2);
-    build2bMes(cmdCo_single, displayON);
+    build2bMes(CObyte.cmdCo_single, cmd.displayON);
     if (i2cWriteDevice(fd, Message2b.data(), 2) < 0)
     {
         perror("display on");
@@ -192,7 +192,7 @@ int SSD1306::init()
 
 int SSD1306::litAll()
 {
-    build2bMes(cmdCo_single, allON);
+    build2bMes(CObyte.cmdCo_single, cmd.allON);
     if (i2cWriteDevice(fd, Message2b.data(), 2) < 0)
     {
         perror("light all");
@@ -203,7 +203,7 @@ int SSD1306::litAll()
 
 int SSD1306::showRAM()
 {
-    build2bMes(cmdCo_single, displayRAM);
+    build2bMes(CObyte.cmdCo_single, cmd.displayRAM);
     if (i2cWriteDevice(fd, Message2b.data(), 2) < 0)
     {
         perror("display ram");
@@ -214,7 +214,7 @@ int SSD1306::showRAM()
 
 int SSD1306::turnOFF()
 {
-    build2bMes(cmdCo_single, displayOFF);
+    build2bMes(CObyte.cmdCo_single, cmd.displayOFF);
     if (i2cWriteDevice(fd, Message2b.data(), 2) < 0)
     {
         perror("turn off");
@@ -225,14 +225,14 @@ int SSD1306::turnOFF()
 
 int SSD1306::invertDisplay()
 {
-    build2bMes(cmdCo_single, setInvertDis);
+    build2bMes(CObyte.cmdCo_single, cmd.setInvertDis);
     i2cWriteDevice(fd, Message2b.data(), 2);
     return 0;
 };
 
 int SSD1306::resetCursor()
 {
-    build2bMes(cmdCo_single, setStar);
+    build2bMes(CObyte.cmdCo_single, cmd.setStar);
     i2cWriteDevice(fd, Message2b.data(), 2);
     return 0;
 };
@@ -249,7 +249,7 @@ int SSD1306::writeImage(int index)
     while (i < 4 * 128)
     {
         mess.clear();
-        mess.push_back(dataCo);
+        mess.push_back(CObyte.dataCo);
         for (int j{1}; j < 31; ++j)
         {
             mess.push_back(Images.at(index).at(i));
@@ -269,7 +269,7 @@ int SSD1306::fillwithbyte(char bt)
     while (i < 4 * 128)
     {
         mess.clear();
-        mess.push_back(dataCo);
+        mess.push_back(CObyte.dataCo);
         for (int j{0}; j < 31; ++j)
         {
             mess.push_back(bt);
@@ -279,10 +279,10 @@ int SSD1306::fillwithbyte(char bt)
         }
         i2cWriteDevice(fd, mess.data(), mess.size());
         // send additional byte to display the data
-        //     build2bMes(cmdCo_single, 0x00);
+        //     build2bMes(CObyte.cmdCo_single, 0x00);
         //     i2cWriteDevice(fd, Message2b.data(), 2);
     }
-    build2bMes(cmdCo_single, noOP);
+    build2bMes(CObyte.cmdCo_single, cmd.noOP);
     i2cWriteDevice(fd, Message2b.data(), 2); // display data?
     return 0;
 };
@@ -294,7 +294,7 @@ int SSD1306::emptyRAM()
     while (i < 4 * 128)
     {
         mess.clear();
-        mess.push_back(dataCo);
+        mess.push_back(CObyte.dataCo);
         for (int j{0}; j < 31; ++j)
         {
             mess.push_back(0);
@@ -304,10 +304,10 @@ int SSD1306::emptyRAM()
         }
         i2cWriteDevice(fd, mess.data(), mess.size());
         // send additional byte to display the data
-        //     build2bMes(cmdCo_single, 0x00);
+        //     build2bMes(CObyte.cmdCo_single, 0x00);
         //     i2cWriteDevice(fd, Message2b.data(), 2);
     }
-    build2bMes(cmdCo_single, noOP);
+    build2bMes(CObyte.cmdCo_single, cmd.noOP);
     i2cWriteDevice(fd, Message2b.data(), 2); // display data?
     return 0;
 };
