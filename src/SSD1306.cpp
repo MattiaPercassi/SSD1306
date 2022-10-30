@@ -23,9 +23,9 @@ int SSD1306::loadCustomImage(std::string filepath)
     // we need to ensure it is a 1bpp bitmap
     char dt;
     std::array<char, 3> validationArr;
-    ifile.read(validationArr, 2);
+    ifile.read(validationArr.data(), 2);
     ifile.ignore(26);
-    ifile.read(validationArr + 2, 1);
+    ifile.read(validationArr.data() + 2, 1);
     if (validationArr.at(0) != 0x42 || validationArr.at(1) != 0x4d || validationArr.at(2) != 0x01)
     {
         std::cerr << "It seems that the image is not a 1bpp bitmap";
@@ -239,7 +239,7 @@ int SSD1306::resetCursor()
 
 int SSD1306::writeImage(int index)
 {
-    if (index > Images.size() - 1 || index < 0)
+    if (index > static_cast<int>(Images.size() - 1) || index < 0)
     {
         std::cerr << "Index not acceptable";
         return -1;

@@ -3,6 +3,7 @@
 #include <pigpio.h>
 #include <array>
 #include <vector>
+#include <string>
 
 class SSD1306
 {
