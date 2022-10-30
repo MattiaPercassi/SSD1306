@@ -55,7 +55,8 @@ int SSD1306::loadCustomImage(std::string filepath)
     ifile.close();
     Images.push_back(finalImage);
     return 0;
-}
+};
+
 void SSD1306::build2bMes(char co1, char d1)
 {
     Message2b[0] = co1;
@@ -234,7 +235,7 @@ int SSD1306::resetCursor()
     build2bMes(cmdCo_single, setStar);
     i2cWriteDevice(fd, Message2b.data(), 2);
     return 0;
-}
+};
 
 int SSD1306::writeImage(int index)
 {
@@ -284,29 +285,11 @@ int SSD1306::fillwithbyte(char bt)
     build2bMes(cmdCo_single, noOP);
     i2cWriteDevice(fd, Message2b.data(), 2); // display data?
     return 0;
-}
+};
 
 int SSD1306::emptyRAM()
 {
     std::vector<char> mess;
-    // command for set column address
-    // mess.push_back(cmdCo_continue);
-    // mess.push_back(0x21);
-    // mess.push_back(cmdCo_continue);
-    // mess.push_back(0);
-    // mess.push_back(cmdCo_single);
-    // mess.push_back(127);
-    // i2cWriteDevice(fd, mess.data(), 6);
-    // // command for set address page
-    // mess.push_back(cmdCo_continue);
-    // mess.push_back(0x22);
-    // mess.push_back(cmdCo_continue);
-    // mess.push_back(0);
-    // mess.push_back(cmdCo_single);
-    // mess.push_back(3);
-    // i2cWriteDevice(fd, mess.data(), 6);
-    // build2bMes(cmdCo_single, setStar);
-    // i2cWriteDevice(fd, Message2b.data(), 2);
     int i{};
     while (i < 4 * 128)
     {

@@ -45,7 +45,6 @@ protected:
     void build2bMes(char co1, char d1);
 
     // resources
-    std::array<char, 16 * 32> startupImage{};
     std::vector<std::array<char, 4 * 128>> Images;
 
 public:
