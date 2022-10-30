@@ -22,13 +22,24 @@ int SSD1306::loadCustomImage(std::string filepath)
     }
     // we need to ensure it is a 1bpp bitmap
     char dt;
+    char wdt;
     std::array<char, 3> validationArr;
     ifile.read(validationArr.data(), 2);
-    ifile.ignore(26);
+    ifile.ignore(16);
+    ifile.read(&wdt, 1); // store the width of the image --> we expect it to be either 128 or 32 so 1 byte is enough
+    ifile.ignore(9);
     ifile.read(validationArr.data() + 2, 1);
     if (validationArr.at(0) != 0x42 || validationArr.at(1) != 0x4d || validationArr.at(2) != 0x01)
     {
-        std::cerr << "It seems that the image is not a 1bpp bitmap";
+        std::cerr << "It seems that the image is not a 1bpp bitmap" << std::endl;
+        ifile.close();
+        return -1;
+    }
+    // Determine the orientation of the bitmap, current code works for 128x32 bitmaps, but it is necessary to work also with 32x128 files
+    if (wdt != 32 && wdt != 128)
+    {
+        std::cerr << "The image is not 128x32 or 32x128" << std::endl;
+        ifile.close();
         return -1;
     }
     ifile.clear();
@@ -41,18 +52,28 @@ int SSD1306::loadCustomImage(std::string filepath)
         ifile.read(&dt, 1);
         byte = dt;
     }
-    for (int i{}; i < 64; ++i) // 64 blocks of 8 bytes
+    ifile.close();
+    if (wdt == 128)
     {
-        for (int j{}; j < 8; ++j) // go through each byte of the new image
+        for (int i{}; i < 64; ++i) // 64 blocks of 8 bytes
         {
-            for (int z{}; z < 8; ++z) // go through each byte of the original bitmap
+            for (int j{}; j < 8; ++j) // go through each byte of the new image
             {
-                dt = 1 & (tempStor[128 * (4 - i / 16) - 16 + i % 16 - z * 16] >> (7 - j));
-                finalImage[i * 8 + j] += (dt << z);
+                for (int z{}; z < 8; ++z) // go through each byte of the original bitmap
+                {
+                    dt = 1 & (tempStor.at(128 * (4 - i / 16) - 16 + i % 16 - z * 16) >> (7 - j));
+                    finalImage.at(i * 8 + j) += (dt << z);
+                }
             }
         }
     }
-    ifile.close();
+    else
+    {
+        for (int i{}; i < static_cast<int>(finalImage.size()); ++i)
+        {
+            finalImage.at(i) = tempStor.at((511 - i / 128) - (i % 128) * 4);
+        }
+    };
     Images.push_back(finalImage);
     return 0;
 };
