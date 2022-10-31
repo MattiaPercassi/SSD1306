@@ -38,6 +38,16 @@ SSD1306::SSD1306(int h, int w) : addr{0x3c}, height{h}, width{w}
     bitmapFont.insert({'X', letters.letterX});
     bitmapFont.insert({'Y', letters.letterY});
     bitmapFont.insert({'Z', letters.letterZ});
+    bitmapFont.insert({'1', letters.letter1});
+    bitmapFont.insert({'2', letters.letter2});
+    bitmapFont.insert({'3', letters.letter3});
+    bitmapFont.insert({'4', letters.letter4});
+    bitmapFont.insert({'5', letters.letter5});
+    bitmapFont.insert({'6', letters.letter6});
+    bitmapFont.insert({'7', letters.letter7});
+    bitmapFont.insert({'8', letters.letter8});
+    bitmapFont.insert({'9', letters.letter9});
+    bitmapFont.insert({'0', letters.letter0});
     bitmapFont.insert({' ', letters.letterSpace});
 };
 
@@ -386,7 +396,10 @@ int SSD1306::writeStr(std::string str)
             {
                 mess.push_back(255);
                 cursor++;
-            }
+            };
+            // skip the space char if we are at the beginning of the line
+            if (cursor % 128 == 1 && ch == ' ')
+                continue;
             // write byte
             for (char &byte : bitmapFont.at(ch))
             {

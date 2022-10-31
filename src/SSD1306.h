@@ -48,6 +48,16 @@ protected:
         std::vector<char> letterY{0b11111101, 0b11111011, 0b10000111, 0b11111011, 0b11111101};
         std::vector<char> letterZ{0b10011101, 0b10101101, 0b10110101, 0b10111001};
         std::vector<char> letterSpace{0b11111111, 0b11111111};
+        std::vector<char> letter0{0b11000011, 0b10111101, 0b11000011};
+        std::vector<char> letter1{0b11111011, 0b10000001};
+        std::vector<char> letter2{0b10011011, 0b10101101, 0b10110011};
+        std::vector<char> letter3{0b10111101, 0b10110101, 0b11001011};
+        std::vector<char> letter4{0b11100001, 0b11101111, 0b10000111};
+        std::vector<char> letter5{0b11011001, 0b10110101, 0b11001101};
+        std::vector<char> letter6{0b11000111, 0b10101011, 0b11001101};
+        std::vector<char> letter7{0b11111101, 0b11111101, 0b10000001};
+        std::vector<char> letter8{0b11001011, 0b10110101, 0b11001011};
+        std::vector<char> letter9{0b11111011, 0b10110101, 0b11000011};
     } letters;
 
     struct
