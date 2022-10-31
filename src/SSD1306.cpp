@@ -12,8 +12,33 @@ SSD1306::SSD1306(int h, int w) : addr{0x3c}, height{h}, width{w}
     fd = i2cOpen(1, addr, 0);
     loadCustomImage("/home/mattia/Documents/i2ctest/resources/rie.bmp"); // load initialization image
     // bitmap font must be initialized
-    std::vector<char> letterM{0b10000001, 0b11111011, 0b11110111, 0b11111011, 0b10000001};
-    bitmapFont.insert({'M', letterM});
+    bitmapFont.insert({'A', letters.letterA});
+    bitmapFont.insert({'B', letters.letterB});
+    bitmapFont.insert({'C', letters.letterC});
+    bitmapFont.insert({'D', letters.letterD});
+    bitmapFont.insert({'E', letters.letterE});
+    bitmapFont.insert({'F', letters.letterF});
+    bitmapFont.insert({'G', letters.letterG});
+    bitmapFont.insert({'H', letters.letterH});
+    bitmapFont.insert({'I', letters.letterI});
+    bitmapFont.insert({'J', letters.letterJ});
+    bitmapFont.insert({'K', letters.letterK});
+    bitmapFont.insert({'L', letters.letterL});
+    bitmapFont.insert({'M', letters.letterM});
+    bitmapFont.insert({'N', letters.letterN});
+    bitmapFont.insert({'O', letters.letterO});
+    bitmapFont.insert({'P', letters.letterP});
+    bitmapFont.insert({'Q', letters.letterQ});
+    bitmapFont.insert({'R', letters.letterR});
+    bitmapFont.insert({'S', letters.letterS});
+    bitmapFont.insert({'T', letters.letterT});
+    bitmapFont.insert({'U', letters.letterU});
+    bitmapFont.insert({'V', letters.letterV});
+    bitmapFont.insert({'W', letters.letterW});
+    bitmapFont.insert({'X', letters.letterX});
+    bitmapFont.insert({'Y', letters.letterY});
+    bitmapFont.insert({'Z', letters.letterZ});
+    bitmapFont.insert({' ', letters.letterSpace});
 };
 
 int SSD1306::loadCustomImage(std::string filepath)

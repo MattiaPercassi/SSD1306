@@ -19,6 +19,36 @@ protected:
     // relevant 2 and 4 byte messages
     std::array<char, 4> Message4b; // 4 bytes message
     std::array<char, 2> Message2b; // 2bytes message
+    struct
+    {
+        std::vector<char> letterA{0b10000011, 0b11101101, 0b11101101, 0b10000011};
+        std::vector<char> letterB{0b10000001, 0b10110101, 0b10110101, 0b11001011};
+        std::vector<char> letterC{0b11000011, 0b10111101, 0b10111101};
+        std::vector<char> letterD{0b10000001, 0b10111101, 0b10111101, 0b11000011};
+        std::vector<char> letterE{0b11000011, 0b10110101, 0b10110101};
+        std::vector<char> letterF{0b10000001, 0b11110101, 0b11111101};
+        std::vector<char> letterG{0b11000011, 0b10111101, 0b10101101, 0b10001101};
+        std::vector<char> letterH{0b10000001, 0b11101111, 0b11101111, 0b10000001};
+        std::vector<char> letterI{0b10000001};
+        std::vector<char> letterJ{0b11001111, 0b10111111, 0b11000001};
+        std::vector<char> letterK{0b10000001, 0b11110111, 0b11101011, 0b10011101};
+        std::vector<char> letterL{0b10000001, 0b10111111, 0b10111111};
+        std::vector<char> letterM{0b10000001, 0b11111011, 0b11110111, 0b11111011, 0b10000001};
+        std::vector<char> letterN{0b10000001, 0b11111011, 0b11110111, 0b11101111, 0b10000001};
+        std::vector<char> letterO{0b11000011, 0b10111101, 0b10111101, 0b11000011};
+        std::vector<char> letterP{0b10000001, 0b11101101, 0b11110011};
+        std::vector<char> letterQ{0b11000011, 0b10111101, 0b10011101, 0b10000011, 0b10111111};
+        std::vector<char> letterR{0b10000001, 0b11110101, 0b10001011};
+        std::vector<char> letterS{0b10111011, 0b10110101, 0b11001101};
+        std::vector<char> letterT{0b11111101, 0b10000001, 0b11111101};
+        std::vector<char> letterU{0b11000001, 0b10111111, 0b10111111, 0b11000001};
+        std::vector<char> letterV{0b11110001, 0b11001111, 0b10111111, 0b11001111, 0b11110001};
+        std::vector<char> letterW{0b11111001, 0b11000111, 0b10111111, 0b11001111, 0b10111111, 0b11000111, 0b11111001};
+        std::vector<char> letterX{0b10011101, 0b11101011, 0b11110111, 0b11101011, 0b10011101};
+        std::vector<char> letterY{0b11111101, 0b11111011, 0b10000111, 0b11111011, 0b11111101};
+        std::vector<char> letterZ{0b10011101, 0b10101101, 0b10110101, 0b10111001};
+        std::vector<char> letterSpace{0b11111111, 0b11111111};
+    } letters;
 
     struct
     {
