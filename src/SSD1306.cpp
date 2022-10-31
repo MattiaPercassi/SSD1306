@@ -344,6 +344,25 @@ int SSD1306::writeStr(std::string str)
         if (bitmapFont.find(ch) != bitmapFont.end())
         {
             mess.push_back(CObyte.dataCo);
+            // skip to next line if the char will go out of the screen, 126 as 1 pixel of margin is considered
+            if (cursor % 128 + bitmapFont.at(ch).size() > 126)
+            {
+                while (cursor % 128 != 0)
+                {
+                    mess.push_back(255);
+                    cursor++;
+                }
+                i2cWriteDevice(fd, mess.data(), mess.size());
+                mess.clear();
+                mess.push_back(CObyte.dataCo);
+            }
+            // write 1 pixedl margina if the cursor is at the beginning of the line
+            if (cursor % 128 == 0)
+            {
+                mess.push_back(255);
+                cursor++;
+            }
+            // write byte
             for (char &byte : bitmapFont.at(ch))
             {
                 mess.push_back(byte);
