@@ -12,6 +12,8 @@ SSD1306::SSD1306(int h, int w) : addr{0x3c}, height{h}, width{w}
     fd = i2cOpen(1, addr, 0);
     loadCustomImage("/home/mattia/Documents/i2ctest/resources/rie.bmp"); // load initialization image
     // bitmap font must be initialized
+    std::vector<char> letterM{0b10000001, 0b11111011, 0b11110111, 0b11111011, 0b10000001};
+    bitmapFont.insert({'M', letterM});
 };
 
 int SSD1306::loadCustomImage(std::string filepath)
@@ -179,6 +181,9 @@ int SSD1306::init()
     // set vcomdetect
     build4bMes(CObyte.cmdCo_continue, cmd.setVCOMdetect, CObyte.cmdCo_single, 0x20);
     i2cWriteDevice(fd, Message4b.data(), 4);
+    // set horizontal mode
+    build4bMes(CObyte.cmdCo_continue, cmd.setMode, CObyte.cmdCo_single, 0x00);
+    i2cWriteDevice(fd, Message4b.data(), 4);
     std::vector<char> mess;
     // command for set address page
     mess.push_back(CObyte.cmdCo_continue);
@@ -196,9 +201,6 @@ int SSD1306::init()
     mess.push_back(CObyte.cmdCo_single);
     mess.push_back(127);
     i2cWriteDevice(fd, mess.data(), 6);
-    // set horizontal mode
-    build4bMes(CObyte.cmdCo_continue, cmd.setMode, CObyte.cmdCo_single, 0x00);
-    i2cWriteDevice(fd, Message4b.data(), 4);
     //  set no scroll
     build2bMes(CObyte.cmdCo_single, cmd.deactivateScroll);
     i2cWriteDevice(fd, Message2b.data(), 2);
@@ -330,22 +332,44 @@ int SSD1306::emptyRAM()
         //     build2bMes(CObyte.cmdCo_single, 0x00);
         //     i2cWriteDevice(fd, Message2b.data(), 2);
     }
-    build2bMes(CObyte.cmdCo_single, cmd.noOP);
-    i2cWriteDevice(fd, Message2b.data(), 2); // display data?
     return 0;
 };
 
 int SSD1306::writeStr(std::string str)
 {
+    // set the start of the
+    std::vector<char> mess;
     for (char &ch : str)
     {
-        std::cout << ch;
+        if (bitmapFont.find(ch) != bitmapFont.end())
+        {
+            mess.push_back(CObyte.dataCo);
+            for (char &byte : bitmapFont.at(ch))
+            {
+                mess.push_back(byte);
+                cursor++;
+            }
+            mess.push_back(0b11111111);
+            cursor++;
+        }
+        if (mess.size() != 0)
+        {
+            i2cWriteDevice(fd, mess.data(), mess.size());
+            mess.clear();
+        }
     }
-    std::cout << std::endl;
+    while (cursor < 128 * 4)
+    {
+        build2bMes(CObyte.dataCo, 255);
+        i2cWriteDevice(fd, Message2b.data(), 2);
+        cursor++;
+    }
+    resetCursor();
     return 0;
 };
 
 int SSD1306::resetCursor()
 {
+    cursor = 0;
     return 0;
 };
