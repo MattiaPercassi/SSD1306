@@ -5,11 +5,13 @@
 #include <bitset>
 #include <iostream>
 #include <string>
+#include <map>
 
 SSD1306::SSD1306(int h, int w) : addr{0x3c}, height{h}, width{w}
 {
     fd = i2cOpen(1, addr, 0);
-    loadCustomImage("/home/mattia/Documents/i2ctest/resources/rie.bmp");
+    loadCustomImage("/home/mattia/Documents/i2ctest/resources/rie.bmp"); // load initialization image
+    // bitmap font must be initialized
 };
 
 int SSD1306::loadCustomImage(std::string filepath)
@@ -251,7 +253,7 @@ int SSD1306::invertDisplay()
     return 0;
 };
 
-int SSD1306::resetCursor()
+int SSD1306::resetStart()
 {
     build2bMes(CObyte.cmdCo_single, cmd.setStar);
     i2cWriteDevice(fd, Message2b.data(), 2);
@@ -330,5 +332,20 @@ int SSD1306::emptyRAM()
     }
     build2bMes(CObyte.cmdCo_single, cmd.noOP);
     i2cWriteDevice(fd, Message2b.data(), 2); // display data?
+    return 0;
+};
+
+int SSD1306::writeStr(std::string str)
+{
+    for (char &ch : str)
+    {
+        std::cout << ch;
+    }
+    std::cout << std::endl;
+    return 0;
+};
+
+int SSD1306::resetCursor()
+{
     return 0;
 };

@@ -4,6 +4,7 @@
 #include <array>
 #include <vector>
 #include <string>
+#include <map>
 
 class SSD1306
 {
@@ -12,6 +13,8 @@ protected:
     int fd;
     const int height;
     const int width;
+    int cursor{};
+    std::map<char, std::vector<char>> bitmapFont;
 
     // relevant 2 and 4 byte messages
     std::array<char, 4> Message4b; // 4 bytes message
@@ -58,17 +61,23 @@ protected:
 
 public:
     SSD1306(int h, int w);
+    // general functions
     int init();
     int closeConnection();
+    // setup functions
     int litAll();
     int showRAM();
     int turnOFF();
-    int writeImage(int);
-    int emptyRAM();
-    int resetCursor();
-    int fillwithbyte(char);
+    int resetStart();
     int invertDisplay();
     int loadCustomImage(std::string);
+    // image writing functions
+    int writeImage(int);
+    int emptyRAM();
+    int fillwithbyte(char);
+    // string writing functions
+    int writeStr(std::string);
+    int resetCursor();
 };
 
 #endif
