@@ -125,6 +125,14 @@ void SSD1306::build2bMes(char co1, char d1)
 
 int SSD1306::closeConnection()
 {
+    while (cursor > 0 && cursor < 512)
+    {
+        build2bMes(CObyte.dataCo, 0);
+        i2cWriteDevice(fd, Message2b.data(), 2);
+        cursor++;
+    }
+    if (cursor >= 512)
+        cursor -= 512;
     i2cClose(fd);
     return 0;
 };
@@ -304,6 +312,14 @@ int SSD1306::writeImage(int index)
         std::cerr << "Index not acceptable";
         return -1;
     }
+    while (cursor > 0 && cursor < 512)
+    {
+        build2bMes(CObyte.dataCo, 0);
+        i2cWriteDevice(fd, Message2b.data(), 2);
+        cursor++;
+    }
+    if (cursor >= 512)
+        cursor -= 512;
     std::vector<char> mess;
     int i{};
     while (i < 4 * 128)
@@ -325,6 +341,14 @@ int SSD1306::writeImage(int index)
 int SSD1306::fillwithbyte(char bt)
 {
     std::vector<char> mess;
+    while (cursor > 0 && cursor < 512)
+    {
+        build2bMes(CObyte.dataCo, 0);
+        i2cWriteDevice(fd, Message2b.data(), 2);
+        cursor++;
+    }
+    if (cursor >= 512)
+        cursor -= 512;
     int i{};
     while (i < 4 * 128)
     {
@@ -349,6 +373,14 @@ int SSD1306::fillwithbyte(char bt)
 
 int SSD1306::emptyRAM()
 {
+    while (cursor > 0 && cursor < 512)
+    {
+        build2bMes(CObyte.dataCo, 0);
+        i2cWriteDevice(fd, Message2b.data(), 2);
+        cursor++;
+    }
+    if (cursor >= 512)
+        cursor -= 512;
     std::vector<char> mess;
     int i{};
     while (i < 4 * 128)
@@ -372,6 +404,14 @@ int SSD1306::emptyRAM()
 
 int SSD1306::writeStr(std::string str)
 {
+    // while (cursor > 0 && cursor < 512)
+    // {
+    //     build2bMes(CObyte.dataCo, 0);
+    //     i2cWriteDevice(fd, Message2b.data(), 2);
+    //     cursor++;
+    // }
+    if (cursor >= 512)
+        cursor -= 512;
     // set the start of the
     std::vector<char> mess;
     for (char &ch : str)
@@ -408,6 +448,8 @@ int SSD1306::writeStr(std::string str)
             }
             mess.push_back(0b11111111);
             cursor++;
+            if (cursor >= 512)
+                cursor -= 512;
         }
         if (mess.size() != 0)
         {
@@ -415,13 +457,12 @@ int SSD1306::writeStr(std::string str)
             mess.clear();
         }
     }
-    while (cursor < 128 * 4)
-    {
-        build2bMes(CObyte.dataCo, 255);
-        i2cWriteDevice(fd, Message2b.data(), 2);
-        cursor++;
-    }
-    resetCursor();
+    // while (cursor < 128 * 4)
+    // {
+    //     build2bMes(CObyte.dataCo, 255);
+    //     i2cWriteDevice(fd, Message2b.data(), 2);
+    //     cursor++;
+    // }
     return 0;
 };
 
