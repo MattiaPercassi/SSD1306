@@ -7,10 +7,10 @@
 #include <string>
 #include <map>
 
-SSD1306::SSD1306(int h, int w) : addr{0x3c}, height{h}, width{w}
+SSD1306::SSD1306(int h, int w, std::string startupFilepath) : addr{0x3c}, height{h}, width{w}
 {
     fd = i2cOpen(1, addr, 0);
-    loadCustomImage("/home/mattia/Documents/i2ctest/resources/rie.bmp"); // load initialization image
+    loadCustomImage("startupFilePath"); // load initialization image
     // bitmap font must be initialized
     bitmapFont.insert({'A', letters.letterA});
     bitmapFont.insert({'B', letters.letterB});

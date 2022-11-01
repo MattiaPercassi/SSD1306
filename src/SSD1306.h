@@ -100,7 +100,7 @@ protected:
     std::vector<std::array<char, 4 * 128>> Images;
 
 public:
-    SSD1306(int h, int w);
+    SSD1306(int h, int w, std::string startupFilepath);
     // general functions
     int init();
     int closeConnection();
